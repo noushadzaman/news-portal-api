@@ -31,12 +31,42 @@ const handleLoadNews = async (category) => {
       </h2>
       <p>${news.details.slice(0, 100)}...</p>
       <div class="card-actions justify-end">
-        <div class="badge badge-outline">Fashion</div> 
+        <div onclick=handleModal('${
+          news._id
+        }') class="btn btn-primary">Details</div> 
       </div>
     </div>
   </div>`;
     cardContainer.appendChild(div);
   });
+};
+
+const handleModal = async (news_id) => {
+  console.log(news_id);
+
+  const response = await fetch(
+    `https://openapi.programming-hero.com/api/news/${news_id}`
+  );
+  const data = await response.json();
+  console.log(data.data[0]);
+
+  const modalContainer = document.getElementById("modal-container");
+  const div = document.createElement("div");
+  div.innerHTML = `
+ <dialog id="my_modal_1" class="modal">
+   <form method="dialog" class="modal-box">
+     <h3 class="font-bold text-lg">${data.data[0].title}</h3>
+     <p class="py-4">${data.data[0].details}</p>
+     <div class="modal-action">
+     <button class="btn">Close</button>
+    </div>
+   </form>
+ </dialog>
+    `;
+  modalContainer.appendChild(div);
+
+  const modal = document.getElementById("my_modal_1");
+  modal.showModal();
 };
 
 handleCategory();
